@@ -2,9 +2,9 @@ import numpy as np
 import pandas as pd
 import os
 import regex as re
-from word2number import w2n
+# from word2number import w2n
 import usaddress
-from scourgify import normalize_address_record
+# from scourgify import normalize_address_record
 
 
 ASSESSOR_PATH = './data/raw/EXTR_RPAcct_220706.csv'
