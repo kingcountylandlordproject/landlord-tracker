@@ -1,5 +1,9 @@
 #!/bin/bash
 
+./install_postgres.sh
+./start_postgres.sh
+
+
 sudo -u postgres psql -c "ALTER USER postgres ENCRYPTED PASSWORD 'v5UtGtw06T%nBqW';"
 sudo -u postgres psql -c "CREATE ROLE king_county_land CREATEDB ENCRYPTED PASSWORD '15EiidZabIx3SFi';"
 sudo -u postgres psql -c "CREATE DATABASE king_county_parcels WITH OWNER = king_county_land;"
