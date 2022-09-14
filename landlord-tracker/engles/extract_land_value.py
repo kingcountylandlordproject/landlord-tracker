@@ -29,7 +29,8 @@ def extract_land_value(config):
     out = {'appraised_land_value_sum': land_val,
             'improvements_land_value_sum': imp_val,
             'land_val_pcnt': land_val / (land_val + imp_val),
-            'imp_val_pcnt': imp_val / (land_val + imp_val)
+            'imp_val_pcnt': imp_val / (land_val + imp_val),
+            'total_val': land_val + imp_val
     }
 
     print(table.c)
