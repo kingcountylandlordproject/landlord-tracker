@@ -23,6 +23,20 @@ def _parse_addr_line(addr: str):
             return usaddress.tag(addr)
         except:
             return # Hand parse? Fails on foreign addressess
+        
+def _parse_city_state(city_state: str):
+    """
+    TODO: Fix this, as it's not functioning properly
+    """
+    # Remove punctuation and trailing or leading white space
+    city_state = re.sub(r'[^\w\s\d-]', '', city_state.rstrip().lstrip())
+    # Separate out state
+    match = re.search('(?P<city>.*?)\s+(?P<state>[A-Z]{2}$)', city_state)
+    if match:
+        return match['city'], match['state']
+    else:
+        return '', ''
+        
 
 def _owner_data():
     """
@@ -48,14 +62,14 @@ def _owner_data():
     asdf = asdf.drop(columns=['ApprLandVal', 'ApprImpsVal'])
     
     # TO DO: Parse out owner addresses to match KC convention
-    #asdf['Address'] = asdf['AddrLine'] + ' ' + asdf['CityState'] + ' ' + asdf['ZipCode'].astype(str)
-    #addrs = asdf['Address'].apply(_parse_addr_line) 
-    #addrs = pd.DataFrame(asdf['Address'].apply(_parse_addr_line))
     asdf = asdf.rename(columns={'TaxpayerName': 'OwnerName', 
                                 'AttnLine': 'OwnerAttnLine',
                                 'AddrLine': 'OwnerAddrLine',
                                 'CityState': 'OwnerCityState',
                                 'ZipCode': 'OwnerZipCode'})
+    
+    # Parse OwnerCityState into separate columns: City, State, Country
+    
     return asdf
 
 def _condos(owner_data):
@@ -82,7 +96,7 @@ def _residential(owner_data):
     res_cols = ['Major', 'Minor', 'BldgNbr', 'Address', 'BuildingNumber', 
                 'Fraction', 'DirectionPrefix', 'StreetName', 'StreetType', 
                 'DirectionSuffix', 'ZipCode']
-    res_df = pd.read_csv(RES_PATH)[res_cols]
+    res_df = pd.read_csv(RES_PATH, low_memory=False)[res_cols]
     return res_df.merge(owner_data, on=['Major', 'Minor'], how='inner')
 
 def _apartments(owner_data):
@@ -104,14 +118,15 @@ def _clean_data(save_dir):
     
     odf = _owner_data()
 
-    # Load the parcel legal descriptions, also from King County Assessor
-    #ldf = pd.read_csv(LEGAL_PATH)
-    #ldf = ldf[['account_number', 'parcel_number', 'legal_description']].set_index('account_number')
-    
     # Load the Apartment, Condo, and Residential data
-    condos = _condos(odf).to_csv(os.path.join(save_dir, 'condos.csv'))
-    resi = _residential(odf).to_csv(os.path.join(save_dir, 'residential.csv'))
-    apts = _apartmetns(odf).to_csv(os.path.join(save_dir, 'residential.csv'))
-    return
+    condos = _condos(odf)
+    resi = _residential(odf)
+    apts = _apartments(odf)
+    
+    # Save apartments, condo, and residential data
+    condos.to_csv(os.path.join(save_dir, 'condos.csv'))
+    resi.to_csv(os.path.join(save_dir, 'residential.csv'))
+    apts.to_csv(os.path.join(save_dir, 'apartments.csv'))
+    return condos, resi, apts
 
 _clean_data(save_dir='./data/clean')
