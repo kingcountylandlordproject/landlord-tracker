@@ -128,5 +128,3 @@ def _clean_data(save_dir):
     resi.to_csv(os.path.join(save_dir, 'residential.csv'))
     apts.to_csv(os.path.join(save_dir, 'apartments.csv'))
     return condos, resi, apts
-
-_clean_data(save_dir='./data/clean')
