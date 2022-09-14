@@ -3,7 +3,7 @@ user: postgres
 user_pw: 'v5UtGtw06T%nBqW'
 table_user: king_county_connect
 table_pw: '15EiidZabIx3SFi'
-database_name: king_county_data
+database_name: king_county_data_raw
 hostname: localhost
 table_keys:
   apartment:
@@ -25,3 +25,6 @@ table_keys:
     legal_dscriptions_path: 'property_legal_descriptions.csv'
     raw_path: 'EXTR_Parcel.csv'
     table_name: 'king_county_parcel_raw'
+  base_tax:
+    raw_path: 'EXTR_RPAcct_220706.csv'
+    table_name: 'king_county_parcel_raw_tax'
