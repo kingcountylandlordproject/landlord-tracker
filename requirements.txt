@@ -6,3 +6,4 @@ beautifulsoup4==4.9.3
 pyyaml
 sqlalchemy==1.4.41
 psycopg2
+pyspark==3.3.0
