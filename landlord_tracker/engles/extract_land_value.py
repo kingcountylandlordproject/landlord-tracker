@@ -1,5 +1,5 @@
 import pandas as pd
-from common import get_configs, open_config_db
+from common import get_configs, get_db_configs, get_raw_data_configs, open_config_db
 import sqlalchemy as db
 
 def sum_column(engine, table_column):
@@ -7,10 +7,10 @@ def sum_column(engine, table_column):
     sum_result = engine.execute(query).fetchall()
     return sum_result
 
-def extract_land_value(config):
-    tables = config['table_keys']
+def extract_land_value(db_config, raw_table_config):
+    tables = raw_table_config['table_keys']
 
-    engine = open_config_db(config)
+    engine = open_config_db(db_config)
     #with engine.connect() as conn:
     #    #conn.execute("commit")
     #    pass
@@ -38,8 +38,9 @@ def extract_land_value(config):
 
 
 def main():
-    config = get_configs()
-    extract_land_value(config)
+    db_config = get_db_configs()
+    raw_table_config = get_raw_data_configs()
+    extract_land_value(db_config, raw_table_config)
 
 if __name__ == '__main__':
     main()

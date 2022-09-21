@@ -1,3 +1,5 @@
+from common import open_config_db
+from common import get_configs
 import numpy as np
 import pandas as pd
 import os
@@ -5,6 +7,8 @@ import regex as re
 # from word2number import w2n
 import usaddress
 # from scourgify import normalize_address_record
+import sqlalchemy as db
+
 
 
 ASSESSOR_PATH = './data/raw/EXTR_RPAcct_220706.csv'
@@ -112,7 +116,22 @@ def _get_ownership(df):
     val = df.pivot_table(values='AppraisedVal', index='OwnerName', aggfunc='sum')
     return pd.concat([n_props, val], axis=1).sort_values(by='NumProperties', ascending=False)
 
-def _clean_data(save_dir):
+
+def _clean_data(config):
+    tables = config['table_keys']
+
+    engine = open_config_db(config)
+    #with engine.connect() as conn:
+    #    #conn.execute("commit")
+    #    pass
+    md = db.MetaData(bind=engine)
+
+    #print(engine.table_names())
+    table_config = tables['base_raw_tax']
+    table_name = table_config['table_name']
+
+
+
     if not os.path.exists(save_dir):
         os.mkdir(save_dir)
     
@@ -128,3 +147,39 @@ def _clean_data(save_dir):
     resi.to_csv(os.path.join(save_dir, 'residential.csv'))
     apts.to_csv(os.path.join(save_dir, 'apartments.csv'))
     return condos, resi, apts
+
+
+def extract_land_value(config):
+    tables = config['table_keys']
+
+    engine = open_config_db(config)
+    #with engine.connect() as conn:
+    #    #conn.execute("commit")
+    #    pass
+    md = db.MetaData(bind=engine)
+
+    #print(engine.table_names())
+    table_config = tables['base_raw_tax']
+    table_name = table_config['table_name']
+    print(f"extracting total land value on: {table_name}")
+
+    table = db.Table(table_name, md, autoload=True, autoload_with=engine)
+    #sum_column(table.c.TaxableLandVal)
+    land_val = sum_column(engine, table.c.ApprLandVal)[0][0]
+    imp_val = sum_column(engine, table.c.ApprImpsVal)[0][0]
+    print(land_val, imp_val)
+    out = {'appraised_land_value_sum': land_val,
+            'improvements_land_value_sum': imp_val,
+            'land_val_pcnt': land_val / (land_val + imp_val),
+            'imp_val_pcnt': imp_val / (land_val + imp_val),
+            'total_val': land_val + imp_val
+    }
+
+    print(table.c)
+    print(out)
+
+
+
+def main():
+    config = get_configs()
+    _clean_data(config)
