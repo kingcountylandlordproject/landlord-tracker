@@ -17,7 +17,7 @@ def extract_land_value(config):
     md = db.MetaData(bind=engine)
 
     #print(engine.table_names())
-    table_config = tables['base_tax']
+    table_config = tables['base_raw_tax']
     table_name = table_config['table_name']
     print(f"extracting total land value on: {table_name}")
 

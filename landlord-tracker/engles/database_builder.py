@@ -37,7 +37,7 @@ def create_databases_from_config(config):
     for key in tables.keys():
         print(f"uploading table key: {key}")
         table = tables[key]
-        raw_path = table['raw_path']
+        raw_path = table['path']
         table_name = table['table_name']
         df = pd.read_csv(f"{data_path}{raw_path}", encoding='latin-1')
         print(df.head())
