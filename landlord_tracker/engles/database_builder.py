@@ -1,7 +1,7 @@
 import pandas as pd
 
 from sqlalchemy import create_engine 
-from common import RAW_NAME, drop_database_sql, drop_user_sql, get_db_configs, get_raw_data_configs, create_user_sql, create_database_sql, open_config_db
+from common import CLEAN_NAME, RAW_NAME, drop_database_sql, drop_user_sql, get_db_configs, get_raw_data_configs, create_user_sql, create_database_sql, open_config_db
 
 
 def create_databases_from_config(db_config, raw_table_config):
@@ -9,7 +9,9 @@ def create_databases_from_config(db_config, raw_table_config):
     user_pw = db_config['user_pw']
     hostname = db_config['hostname']
     data_path = db_config['data_path']
-    database_name = db_config['db_names'][RAW_NAME]
+    database_name_raw = db_config['db_names'][RAW_NAME]
+    database_name_clean = db_config['db_names'][CLEAN_NAME]
+
 
     table_user = db_config['table_user']
     table_pw = db_config['table_pw']
@@ -18,9 +20,13 @@ def create_databases_from_config(db_config, raw_table_config):
     with engine.connect() as conn:
         conn.execute("commit")
         try:
-            conn.execute(drop_database_sql(database_name))
+            conn.execute(drop_database_sql(database_name_raw))
         except Exception as e:
-            print(f"Warning, faluire to drop database {database_name}")
+            print(f"Warning, faluire to drop database {database_name_raw}")
+        try:
+            conn.execute(drop_database_sql(database_name_clean))
+        except Exception as e:
+            print(f"Warning, faluire to drop database {database_name_clean}")
         try:
             conn.execute(drop_user_sql(table_user))
         except Exception as e:
@@ -28,7 +34,10 @@ def create_databases_from_config(db_config, raw_table_config):
         conn.execute("commit")
         conn.execute(create_user_sql(table_user, table_pw))
         conn.execute("commit")
-        conn.execute(create_database_sql(table_user, database_name))
+        conn.execute(create_database_sql(table_user, database_name_raw))
+        conn.execute("commit")
+        conn.execute(create_database_sql(table_user, database_name_clean))
+
 
     engine = open_config_db(db_config, RAW_NAME)
 

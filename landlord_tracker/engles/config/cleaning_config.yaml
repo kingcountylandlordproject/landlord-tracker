@@ -1,5 +1,5 @@
   
-clean_data_construction:
+table_keys:
   apartment_clean:
     path: 'clean/apartments.csv'
     table_name: 'king_county_apartments'

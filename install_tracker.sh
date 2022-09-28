@@ -10,3 +10,4 @@ cd ./landlord_tracker/engles/scripts
 ./setup_postgres.sh
 cd ..
 python3 ./database_builder.py
+python3 ./cleaning.py

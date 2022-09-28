@@ -1,4 +1,4 @@
-from common import RAW_NAME, SPARK_CLASS_PATH, create_spark_session, get_cleaning_configs, get_db_configs, get_raw_data_configs, get_spark_table, save_spark_df
+from common import CLEAN_NAME, RAW_NAME, SPARK_CLASS_PATH, create_spark_session, get_cleaning_configs, get_db_configs, get_raw_data_configs, get_spark_table, save_spark_df
 import numpy as np
 import pandas as pd
 import os
@@ -107,7 +107,7 @@ def _owner_data(spark, db_config, raw_tables):
                     }    
 
     for key, value in rename_columns.items():
-        pdf.withColumnRenamed(key, value)
+        pdf = pdf.withColumnRenamed(key, value)
     
     #TODO: Parse out owner addresses to match KC convention    
     #TODO: Parse OwnerCityState into separate columns: City, State, Country
@@ -117,8 +117,9 @@ def _owner_data(spark, db_config, raw_tables):
 def _clean_table_type(owner_data, spark, db_config, raw_tables, table_type, cols, out_type):
     table_name = raw_tables[table_type]['table_name']
     df = get_spark_table(spark, db_config, RAW_NAME, table_name)[cols]
-    condos = df.merge(owner_data, on=['Major', 'Minor'], how='inner')
-    return condos
+    df = df.join(owner_data, on=['Major', 'Minor'], how='inner')
+    df.show(1)
+    return df
 
 def _rented_condos(owner_data, condos):
     # TODO: come up with metric to estimate which condos are rentals
@@ -156,9 +157,11 @@ def _clean_data_helper(db_config, raw_table_config, clean_table_config):
     clean_tables = [{**in_configs,**cl} for cl in CLEAN_LIST]
     clean_tables = {ct['out_type']: _clean_table_type(odf, **ct) for ct in clean_tables}
 
+
     for key, clean_table in clean_tables.items():
-        clean_table.to_csv(os.path.join(data_path, clean_table_config[key]['path']))
-        save_spark_df(clean_table, in_configs, clean_table_config[key]['table_name'])
+        print(f'saving database {key}')
+        clean_table.write.mode('overwrite').csv(os.path.join(data_path, clean_table_config['table_keys'][key]['path']))
+        save_spark_df(clean_table, db_config, CLEAN_NAME, clean_table_config['table_keys'][key]['table_name'])
 
 
 def main():
