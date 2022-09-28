@@ -114,8 +114,7 @@ def _owner_data(spark, db_config, raw_tables):
     return pdf
 
 
-def _clean_table_type(owner_data, spark, db_config, raw_tables, table_type, cols):
-
+def _clean_table_type(owner_data, spark, db_config, raw_tables, table_type, cols, out_type):
     table_name = raw_tables[table_type]['table_name']
     df = get_spark_table(spark, db_config, RAW_NAME, table_name)[cols]
     condos = df.merge(owner_data, on=['Major', 'Minor'], how='inner')
