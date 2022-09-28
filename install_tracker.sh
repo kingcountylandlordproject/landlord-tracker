@@ -3,8 +3,10 @@
 sudo apt install libpq-dev
 
 pip install -r ./requirements.txt
-cd ./landlord-tracker/engles
-./scripts/install_postgres.sh
-./scripts/start_postgres.sh
-./scripts/setup_postgres.sh
+cd ./landlord_tracker/engles/scripts
+./purge_postgres.sh
+./install_postgres.sh
+./start_postgres.sh
+./setup_postgres.sh
+cd ..
 python3 ./database_builder.py

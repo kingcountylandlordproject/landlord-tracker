@@ -3,5 +3,7 @@ user: postgres
 user_pw: 'v5UtGtw06T%nBqW'
 table_user: king_county_connect
 table_pw: '15EiidZabIx3SFi'
-database_name: king_county_data_raw
 hostname: localhost
+db_names:
+  raw: king_county_data_raw
+  clean: king_county_data_clean 

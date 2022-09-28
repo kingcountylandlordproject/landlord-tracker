@@ -1,7 +1,7 @@
 import pandas as pd
 
 from sqlalchemy import create_engine 
-from common import drop_database_sql, drop_user_sql, get_db_configs, get_raw_data_configs, create_user_sql, create_database_sql, open_config_db
+from common import RAW_NAME, drop_database_sql, drop_user_sql, get_db_configs, get_raw_data_configs, create_user_sql, create_database_sql, open_config_db
 
 
 def create_databases_from_config(db_config, raw_table_config):
@@ -9,8 +9,7 @@ def create_databases_from_config(db_config, raw_table_config):
     user_pw = db_config['user_pw']
     hostname = db_config['hostname']
     data_path = db_config['data_path']
-    database_name = db_config['database_name']
-    #encryption_pw = db_config['encryption_pw']
+    database_name = db_config['db_names'][RAW_NAME]
 
     table_user = db_config['table_user']
     table_pw = db_config['table_pw']
@@ -31,7 +30,7 @@ def create_databases_from_config(db_config, raw_table_config):
         conn.execute("commit")
         conn.execute(create_database_sql(table_user, database_name))
 
-    engine = open_config_db(db_config)
+    engine = open_config_db(db_config, RAW_NAME)
 
     tables = raw_table_config['table_keys']
     for key in tables.keys():
@@ -40,6 +39,7 @@ def create_databases_from_config(db_config, raw_table_config):
         raw_path = table['path']
         table_name = table['table_name']
         df = pd.read_csv(f"{data_path}{raw_path}", encoding='latin-1')
+        print(f'sending to sql {table_name} on engine {engine}\n')
         print(df.head())
         df.to_sql(table_name, engine)
 

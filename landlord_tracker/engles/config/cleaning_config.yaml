@@ -1,0 +1,11 @@
+  
+clean_data_construction:
+  apartment_clean:
+    path: 'clean/apartments.csv'
+    table_name: 'king_county_apartments'
+  condo_clean:
+    path: 'clean/condos.csv'
+    table_name: 'king_county_condos'
+  residential_clean:
+    path: 'clean/residential.csv'
+    table_name: 'king_county_residential'  
