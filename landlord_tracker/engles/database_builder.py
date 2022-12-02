@@ -17,8 +17,9 @@ def create_databases_from_config(db_config, raw_table_config):
     table_pw = db_config['table_pw']
     engine = create_engine(f'postgresql+psycopg2://{user}:{user_pw}@{hostname}')
     
-    with engine.connect() as conn:
-        conn.execute("commit")
+    # run these statements in a connection with autocommit to avoid these errors:
+    # "ERROR:  DROP DATABASE [or other statement] cannot run inside a transaction block"
+    with engine.connect().execution_options(isolation_level="AUTOCOMMIT") as conn:
         try:
             conn.execute(drop_database_sql(database_name_raw))
         except Exception as e:
@@ -31,11 +32,8 @@ def create_databases_from_config(db_config, raw_table_config):
             conn.execute(drop_user_sql(table_user))
         except Exception as e:
             print(f"Warning, faluire to drop user {table_user}")
-        conn.execute("commit")
         conn.execute(create_user_sql(table_user, table_pw))
-        conn.execute("commit")
         conn.execute(create_database_sql(table_user, database_name_raw))
-        conn.execute("commit")
         conn.execute(create_database_sql(table_user, database_name_clean))
 
 

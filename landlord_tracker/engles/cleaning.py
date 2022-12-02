@@ -1,4 +1,4 @@
-from common import CLEAN_NAME, RAW_NAME, SPARK_CLASS_PATH, create_spark_session, get_cleaning_configs, get_db_configs, get_raw_data_configs, get_spark_table, save_spark_df
+from common import CLEAN_NAME, RAW_NAME, create_spark_session, get_cleaning_configs, get_db_configs, get_raw_data_configs, get_spark_table, save_spark_df
 import numpy as np
 import pandas as pd
 import os

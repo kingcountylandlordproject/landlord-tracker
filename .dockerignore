@@ -1,0 +1,4 @@
+*
+!/landlord_tracker
+!docker-entrypoint.sh
+!requirements.txt
