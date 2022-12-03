@@ -7,7 +7,6 @@ DB_CONFIG_PATH = "./config/postgres_db_config.yaml"
 RAW_DATA_CONFIG_PATH = "./config/raw_data_config.yaml"
 CLEANING_CONFIG_PATH = "./config/cleaning_config.yaml"
 
-SPARK_CLASS_PATH = os.environ['PYSPARK_SUBMIT_ARGS'] = '--packages org.postgresql:postgresql:42.5.0 pyspark-shell'
 CREATE_USER_SQL = 'CREATE USER :username WITH PASSWORD :passwd'
 RAW_NAME = 'raw'
 CLEAN_NAME = 'clean'
@@ -15,7 +14,6 @@ CLEAN_NAME = 'clean'
 def create_spark_session():
     spark = SparkSession \
     .builder \
-    .config("spark.driver.extraClassPath", SPARK_CLASS_PATH) \
     .getOrCreate()
     return spark
 
@@ -54,10 +52,10 @@ def create_database_sql(username, database):
     return f'CREATE DATABASE {database} WITH OWNER = {username};'
 
 def drop_user_sql(username):
-    return f'DROP USER {username}'
+    return f'DROP USER IF EXISTS {username}'
 
 def drop_database_sql(database):
-    return f'DROP DATABASE {database};'
+    return f'DROP DATABASE IF EXISTS {database};'
 
 def get_db_configs():
     with open(DB_CONFIG_PATH, "r") as config:
