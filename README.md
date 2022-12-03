@@ -15,7 +15,8 @@ docker compose up --build
 ```
 
 You'll see a "Finished build" message when it's finished. Output files are created
-in `./data/clean`.
+in `./data/clean`. You can connect to the postgres database on localhost:5433 using
+a SQL client (like DBeaver).
 
 * to (re)run only the load or transforms, after "compose up" has run
 (run this in another window):
@@ -26,7 +27,12 @@ docker compose run elt load
 
 # runs only the transforms
 docker compose run elt transform
+
+# runs everything
+docker compose run elt build-all
 ```
+
+* to stop the stack, run `docker compose down`
 
 However, this may not work on the first try so if you enconter any bugs during the process, please message thomas.da.paine on slack or in the signal to fix the problems you encounter. Thanks!
 
