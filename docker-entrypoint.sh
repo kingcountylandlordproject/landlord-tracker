@@ -28,6 +28,8 @@ elif [ "$1" = 'build-all' ]; then
     load
     transform
     echo "Finished build"
+elif [ "$1" = 'noop' ]; then
+    echo "Doing nothing."
 else
     exec "$@"
 fi

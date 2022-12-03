@@ -6,7 +6,8 @@ services:
   elt:
     build:
       context: .
-    command: "build-all"
+    # by default, don't do anything
+    command: "noop"
     depends_on:
       db:
         condition: service_healthy
@@ -18,6 +19,7 @@ services:
     networks:
       - all
     volumes:
+      - ./landlord_tracker:/opt/kclp/landlord_tracker
       - ./data:/opt/kclp/data/
 
   db:
