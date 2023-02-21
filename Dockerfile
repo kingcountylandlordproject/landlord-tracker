@@ -22,6 +22,9 @@ RUN --mount=type=cache,mode=0777,target=/var/cache/pip \
 
 COPY . .
 
+ENV PYTHONPATH /opt/kclp
+ENV PATH="${PATH}:/opt/kclp/bin"
+
 COPY docker-entrypoint.sh /
 
 ENTRYPOINT ["./docker-entrypoint.sh"]

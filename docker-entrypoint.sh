@@ -4,18 +4,45 @@ set -e
 
 DIR=$PWD
 
-load () {
-    cd $DIR/landlord_tracker/engles
+HOME_DBT_DIR=~/.dbt
 
-    echo "(Re)creating and loading database tables"
-    python3 ./database_builder.py
+PROFILES_YML="${HOME_DBT_DIR}/profiles.yml"
+
+if [ ! -f $PROFILES_YML ]; then
+    echo "creating $PROFILES_YML"
+    mkdir -p $HOME_DBT_DIR
+    cat > $PROFILES_YML << EOF
+landlord_tracker:
+  outputs:
+    dev:
+      type: postgres
+      threads: 2
+      host: $DB_HOSTNAME
+      port: 5432
+      user: $DB_USER
+      pass: $DB_PASSWORD
+      dbname: $DB_USER
+      schema: public
+
+  target: dev
+EOF
+fi
+
+load () {
+    echo "Loading database tables"
+    load_sources.py
 }
 
 transform () {
-    cd $DIR/landlord_tracker/engles
-
     echo "Running transforms"
-    python3 ./cleaning.py
+    cd $DIR/dbt
+    dbt run
+}
+
+docs () {
+    echo "Creating docs"
+    cd $DIR/dbt
+    dbt docs generate
 }
 
 if [ "$1" = 'load' ]; then
@@ -23,6 +50,7 @@ if [ "$1" = 'load' ]; then
 
 elif [ "$1" = 'transform' ]; then
     transform
+    docs
 
 elif [ "$1" = 'build-all' ]; then
     load

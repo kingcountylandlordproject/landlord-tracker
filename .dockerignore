@@ -1,4 +1,7 @@
 *
-!/landlord_tracker
+!/bin
+!/dbt
+!/engels
 !docker-entrypoint.sh
+!setup.py
 !requirements.txt

@@ -1,0 +1,62 @@
+
+sources:
+  king_county_assessors: &king_county_assessors
+    name: 'King County Department of Assessments'
+    comment: |
+      https://info.kingcounty.gov/assessor/DataDownload/default.aspx
+      
+      Tab delimited files downloaded, for ease of loading. Note "Download All Above files" link at bottom of page.
+
+tables:
+
+  raw_apartment_complex:
+    path: 'raw/kcda/2023_02_17/EXTR_AptComplex.csv'
+    source: *king_county_assessors
+
+  raw_commercial_building:
+    path: 'raw/kcda/2023_02_17/EXTR_CommBldg.csv'
+    source: *king_county_assessors
+
+  raw_condo_complex:
+    path: 'raw/kcda/2023_02_17/EXTR_CondoComplex.csv'
+    source: *king_county_assessors
+
+  # TODO: figure out more expedient way to load this; it contains name information
+  #
+  # raw_change_history_detail:
+  #   encoding: latin-1
+  #   path: 'raw/kcda/2023_02_17/EXTR_ChangeHistDetail_V.csv'
+  #   remove_newlines_in_values: true
+  #   source: *king_county_assessors
+
+  raw_parcel:
+    format: csv
+    encoding: latin-1
+    path: 'raw/kcda/2023_02_17/EXTR_Parcel.csv'
+    source: *king_county_assessors
+
+  raw_real_property_account:
+    format: csv
+    encoding: latin-1
+    path: 'raw/kcda/2023_02_17/EXTR_RPAcct_NoName.csv'
+    source: *king_county_assessors
+
+  raw_real_property_account_2022_07_06:
+    format: csv
+    encoding: latin-1
+    path: 'raw/kcda/2022_07_06/EXTR_RPAcct_220706.csv'
+    source: *king_county_assessors
+    comment: |
+      last accounts file we have with taxpayername field
+
+  raw_residential_building:
+    format: csv
+    encoding: latin-1
+    path: 'raw/kcda/2023_02_17/EXTR_ResBldg.csv'
+    source: *king_county_assessors
+
+  raw_vacant_lot:
+    format: csv
+    encoding: latin-1
+    path: 'raw/kcda/2023_02_17/EXTR_VacantLot.csv'
+    source: *king_county_assessors
