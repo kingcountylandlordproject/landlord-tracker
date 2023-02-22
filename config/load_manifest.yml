@@ -5,7 +5,15 @@ sources:
     comment: |
       https://info.kingcounty.gov/assessor/DataDownload/default.aspx
       
-      Tab delimited files downloaded, for ease of loading. Note "Download All Above files" link at bottom of page.
+      Note "Download All Above files" link at bottom of page.
+
+  sdci: &sdci
+    name: 'Seattle Department of Construction & Inspections'
+
+  wasos: &wasos
+    name: 'WA Secretary of State'
+    comment: |
+      extracts are not available on website anymore
 
 tables:
 
@@ -16,6 +24,19 @@ tables:
   raw_commercial_building:
     path: 'raw/kcda/2023_02_17/EXTR_CommBldg.csv'
     source: *king_county_assessors
+
+  raw_complaints:
+    path: 'raw/sdci/2023_02_21/Code_Complaints_and_Violations.csv'
+    source: *sdci
+    comment: |
+      https://data.seattle.gov/Community/Code-Complaints-and-Violations/ez4a-iug7
+
+  raw_corporations:
+    path: 'raw/wasos/2022_10_17/Corporations-patched.txt'
+    format: tsv
+    source: *wasos
+    comment: |
+      patched file has 67 lines dropped due to "extra field" problems
 
   raw_condo_complex:
     path: 'raw/kcda/2023_02_17/EXTR_CondoComplex.csv'

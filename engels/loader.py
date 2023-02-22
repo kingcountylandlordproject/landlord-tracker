@@ -31,7 +31,9 @@ def get_db_engine(user=None, password=None, hostname=None):
 CAMEL_TO_SNAKE_RE = re.compile(r'(?<!^)(?=[A-Z])')
 
 def camel_to_snake(s):
-    return CAMEL_TO_SNAKE_RE.sub('_', s).lower()
+    if s == s.upper():
+        return s.lower()
+    return CAMEL_TO_SNAKE_RE.sub('_', s).replace(' ', '').lower()
 
 def get_column_names_header(path, format: FileFormat=None):
     if format == FileFormat.CSV:
@@ -100,9 +102,10 @@ def load_all():
                 # path which the server (not this process) uses
                 server_path = get_db_data_path(table_entry['path'])
 
-                sql_copy = f"COPY {table} ({','.join(headers)}) FROM '{server_path}' WITH (FORMAT csv, HEADER, ENCODING '{encoding}', FORCE_NULL({','.join(headers)}))"
                 if format == FileFormat.TSV:
-                    sql_copy += " DELIMITER '\t'"
+                    sql_copy = f"COPY {table} ({','.join(headers)}) FROM '{server_path}' WITH (FORMAT text, ENCODING '{encoding}')"
+                else:
+                    sql_copy = f"COPY {table} ({','.join(headers)}) FROM '{server_path}' WITH (FORMAT csv, HEADER, ENCODING '{encoding}', FORCE_NULL({','.join(headers)}))"
 
                 conn.execute(sql_copy)
 

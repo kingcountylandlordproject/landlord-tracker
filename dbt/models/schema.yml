@@ -37,6 +37,7 @@ sources:
       - name: raw_apartment_complex
       - name: raw_commercial_building
       - name: raw_condo_complex
+      - name: raw_corporations
       - name: raw_parcel
       - name: raw_real_property_account
       - name: raw_real_property_account_2022_07_06
