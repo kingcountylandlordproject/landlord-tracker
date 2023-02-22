@@ -23,8 +23,8 @@ models:
       one per parcel they pay tax on. So there is no unique identifier in this data for a given
       person or company. This needs to be derived/reconciled downstream.
 
-      Adjustments to owner information could be handled by using a correction table of (acct_nbr, fixed_name)
-      or maybe (major_minor, fixed_name) fields.
+      Adjustments to owner information could be handled by using a correction table of
+      (major_minor, taxpayer_name, fixed_name) fields.
 
       The most recent files from KCDA have the TaxpayerName field removed, so we merge in older files
       to get those names. TODO: the names are also present in other current files in the dataset,
