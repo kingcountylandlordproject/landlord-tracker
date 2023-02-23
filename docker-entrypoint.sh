@@ -37,6 +37,7 @@ transform () {
     echo "Running transforms"
     cd $DIR/dbt
     dbt run
+    dbt test
 }
 
 docs () {
@@ -56,6 +57,12 @@ elif [ "$1" = 'build-all' ]; then
     load
     transform
     echo "Finished build"
+
+elif [ "$1" = 'serve-docs' ]; then
+    mkdir -p $DIR/dbt/target
+    cd $DIR/dbt/target
+    python3 -m http.server
+
 elif [ "$1" = 'noop' ]; then
     echo "Doing nothing."
 else

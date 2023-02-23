@@ -22,6 +22,15 @@ services:
     volumes:
       - .:/opt/kclp
 
+  docs:
+    build:
+      context: .
+    command: "serve-docs"
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/opt/kclp
+
   db:
     environment:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}

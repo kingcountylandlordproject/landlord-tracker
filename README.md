@@ -36,7 +36,13 @@ the postgres database on localhost:5433 using a SQL client (like DBeaver) or use
 
 ```docker exec -it landlord-tracker-db-1 psql -U postgres```
 
-* to (re)run only the load or transforms as you are doing development:
+* to stop the stack, run `docker compose down`. This stops the postgres
+database, but the data should be preserved and available agaion the next time
+you run `compose up`.
+
+## Doing Development
+
+To (re)run only the load or transforms as you are doing development:
 
 ```sh
 # runs only the initial load of database tables
@@ -46,6 +52,6 @@ docker compose run elt load
 docker compose run elt transform
 ```
 
-* to stop the stack, run `docker compose down`. This stops the postgres
-database, but the data should be preserved and available agaion the next time
-you run `compose up`.
+After running the transform step, you can view the updated dbt-generated
+HTML documentation at http://localhost:8000 to get a thousand foot view of
+the pipelines.
