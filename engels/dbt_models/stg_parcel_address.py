@@ -13,13 +13,13 @@ def create_parcel_address():
     with engine.connect() as conn:
         conn.execute(
             """
-        DROP TABLE IF EXISTS parcel_address
+        DROP TABLE IF EXISTS stg_parcel_address
         """
         )
 
         conn.execute(
             """
-        CREATE TABLE parcel_address (
+        CREATE TABLE stg_parcel_address (
             major_minor VARCHAR
             ,address VARCHAR
             ,address_normalized VARCHAR
@@ -66,7 +66,7 @@ def create_parcel_address():
                 # insert
                 dbapi_conn = conn.connection
                 insert_cursor = dbapi_conn.cursor()
-                insert_query = "INSERT INTO parcel_address(major_minor,address,address_normalized,address_zipcode_normalized) VALUES(%s, %s, %s, %s)"
+                insert_query = "INSERT INTO stg_parcel_address(major_minor,address,address_normalized,address_zipcode_normalized) VALUES(%s, %s, %s, %s)"
                 insert_cursor.executemany(insert_query, insert_batch)
                 dbapi_conn.commit()
             else:

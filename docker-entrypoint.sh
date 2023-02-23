@@ -38,7 +38,7 @@ transform () {
     cd $DIR/dbt
     dbt run
 
-    python3 -m engels.dbt_models.parcel_address
+    python3 -m engels.dbt_models.stg_parcel_address
 
     dbt test
 }

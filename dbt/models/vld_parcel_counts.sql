@@ -15,7 +15,7 @@ select
         and rcc.major is null
         and rcb.major is null
         and rvl.major is null then 1 else 0 end) as uncategorized
-from {{ ref('parcel') }} p
+from {{ ref('stg_parcel') }} p
 left join {{ source('src', 'raw_apartment_complex') }} rac
 	on p.major_minor  = concat(rac.major, rac.minor)
 left join {{ source('src', 'raw_residential_building') }} rrb

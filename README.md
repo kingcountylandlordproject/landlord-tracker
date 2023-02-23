@@ -42,6 +42,8 @@ you run `compose up`.
 
 ## Doing Development
 
+### Dev Process
+
 To (re)run only the load or transforms as you are doing development:
 
 ```sh
@@ -55,6 +57,23 @@ docker compose run elt transform
 docker compose run elt bash
 ```
 
+### Documentation
+
 After running the transform step, you can view the updated dbt-generated
 HTML documentation at http://localhost:8000 to get a thousand foot view of
 the pipelines.
+
+### Naming Conventions
+
+For tables:
+
+`raw_` - raw aka source tables, imported into the database either directly
+from extract files or lightly preprocessed.
+
+`int_` - intermediate tables; these only exist to help create other tables.
+
+`stg_` - staged data: these are cleaned versions of raw tables, suitable for querying.
+
+`ent_` - derived entity tables built from staging 
+
+`vld_` - for validation

@@ -3,21 +3,21 @@ version: 2
 
 models:
 
-  - name: parcel
+  - name: stg_parcel
     description: >
       PK is major_minor.
 
       Parcels don't have an address. An apartment complex seems to have the same major_minor
       identifier as the parcel it sits on.
 
-  - name: parcel_address
+  - name: stg_parcel_address
     description: >
       Mapping of addresses to parcels.
 
       Parcels don't have an address. An apartment complex seems to have the same major_minor
       identifier as the parcel it sits on.
 
-  - name: real_property_account
+  - name: stg_real_property_account
     description: >
       "real" (eReal?) property accounts. Grain of this table is (acct_nbr, bill_yr, levy_code),
       though records are only for the current year.
