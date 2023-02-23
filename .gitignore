@@ -132,3 +132,5 @@ data/
 config.json
 
 data*
+
+.vscode
