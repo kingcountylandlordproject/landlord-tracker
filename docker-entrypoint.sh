@@ -56,6 +56,7 @@ elif [ "$1" = 'transform' ]; then
 elif [ "$1" = 'build-all' ]; then
     load
     transform
+    docs
     echo "Finished build"
 
 elif [ "$1" = 'serve-docs' ]; then

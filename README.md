@@ -45,11 +45,14 @@ you run `compose up`.
 To (re)run only the load or transforms as you are doing development:
 
 ```sh
-# runs only the initial load of database tables
+# re-runs only the initial load of database tables
 docker compose run elt load
 
-# runs only the transforms
+# re-runs only the transforms
 docker compose run elt transform
+
+# you can also run bash in the container and run other things
+docker compose run elt bash
 ```
 
 After running the transform step, you can view the updated dbt-generated
