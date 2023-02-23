@@ -3,9 +3,10 @@ from enum import Enum, auto
 import io
 import os
 import re
+import subprocess
 import tempfile
 
-from .common import get_data_path, get_db_data_path, get_load_manifest
+from .common import get_data_path, get_db_data_path, get_load_manifest, get_project_path
 from .db import get_db_engine
 
 class AutoName(Enum):
@@ -128,3 +129,22 @@ def load_all():
 
                 if remove_newlines_in_values:
                     os.unlink(tmpfile.name)
+
+
+def create_data_package():
+    """
+    Create a .zip file containing all the files under the data/ 
+    directory needed to satisfy the load manifest file
+    """
+    load_manifest = get_load_manifest()
+        
+    tables = load_manifest['tables']
+    
+    paths = []
+    for table in tables.keys():
+        table_entry = tables[table]
+        paths.append(table_entry['path'])
+
+    data_dir = os.path.join(get_project_path(), "data")
+
+    subprocess.run(f"zip data.zip {' '.join(paths)}", cwd=data_dir, shell=True)

@@ -5,7 +5,7 @@ import os
 
 from sqlalchemy import create_engine
 
-from engels.loader import load_all
+from engels.load import load_all
 
 def main():
     load_all()

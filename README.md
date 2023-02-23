@@ -4,7 +4,12 @@
 
 * install docker
 
-* unzip the datafile into a ./data/raw directory
+* unzip the data package zipfile into the `./data` directory
+
+```sh
+cd data
+unzip /path/to/data.zip
+```
 
 * start services required for the build (right now, just the database):
 
