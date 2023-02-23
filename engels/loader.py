@@ -1,5 +1,6 @@
 import csv
 from enum import Enum, auto
+import io
 import os
 import re
 import tempfile
@@ -33,20 +34,33 @@ CAMEL_TO_SNAKE_RE = re.compile(r'(?<!^)(?=[A-Z])')
 def camel_to_snake(s):
     if s == s.upper():
         return s.lower()
-    return CAMEL_TO_SNAKE_RE.sub('_', s).replace(' ', '').lower()
+    s = s.replace(" ", "_")
+    snake = CAMEL_TO_SNAKE_RE.sub('_', s)
+    return re.sub("_{2,}", "_", snake).lower()
 
-def get_column_names_header(path, format: FileFormat=None):
+
+def get_first_line(path):
+    with open(path) as f:
+        return f.readline()
+
+
+def parse_header(line: str, format: FileFormat=None, normalize=False):
+    """
+    parse the header string (first line of a file) containing column names
+    """
     if format == FileFormat.CSV:
-        with open(path, newline='') as f:
-            reader = csv.reader(f)
-            column_names = next(reader)
+        f = io.StringIO(line)
+        reader = csv.reader(f)
+        column_names = next(reader)
     elif format == FileFormat.TSV:
-        with open(path) as f:
-            firstline = f.readline()
-            column_names = firstline.split("\t")
+        column_names = [col.strip() for col in line.split("\t")]
     else:
         raise Exception("unknown format or format not supported")
-    return [ camel_to_snake(col) for col in column_names ]
+
+    if normalize:
+        return [ camel_to_snake(col) for col in column_names ]
+    else:
+        return column_names
 
 
 def clean(val):
@@ -93,8 +107,10 @@ def load_all():
                     drop_table_sql = f"DROP TABLE IF EXISTS {table}"
                     conn.execute(drop_table_sql)
 
-                headers = get_column_names_header(full_path, format)
-                fields = ",".join([ f"{header} VARCHAR" for header in headers ])
+                first_line = get_first_line(full_path)
+                original_column_names = parse_header(first_line, format)
+                column_names = parse_header(first_line, format, normalize=True)
+                fields = ",".join([ f"{header} VARCHAR" for header in column_names ])
                 
                 create_table_sql = f"CREATE TABLE {table} ({fields})"
                 conn.execute(create_table_sql)
@@ -103,11 +119,16 @@ def load_all():
                 server_path = get_db_data_path(table_entry['path'])
 
                 if format == FileFormat.TSV:
-                    sql_copy = f"COPY {table} ({','.join(headers)}) FROM '{server_path}' WITH (FORMAT text, ENCODING '{encoding}')"
+                    sql_copy = f"COPY {table} ({','.join(column_names)}) FROM '{server_path}' WITH (FORMAT text, ENCODING '{encoding}')"
                 else:
-                    sql_copy = f"COPY {table} ({','.join(headers)}) FROM '{server_path}' WITH (FORMAT csv, HEADER, ENCODING '{encoding}', FORCE_NULL({','.join(headers)}))"
+                    sql_copy = f"COPY {table} ({','.join(column_names)}) FROM '{server_path}' WITH (FORMAT csv, HEADER, ENCODING '{encoding}', FORCE_NULL({','.join(column_names)}))"
 
                 conn.execute(sql_copy)
+
+                # the 'header' option in COPY is only available for csv, so delete the row with the column names
+                if format == FileFormat.TSV:
+                    where = " AND ".join([f"\"{col}\" = %s" for col in column_names])
+                    conn.execute(f"DELETE FROM {table} WHERE {where}", original_column_names)
 
                 cursor = conn.execute(f"SELECT COUNT(*) as num_rows FROM {table}")
 
