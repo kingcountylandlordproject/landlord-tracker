@@ -8,6 +8,6 @@ sqlalchemy==1.4.46
 psycopg2
 #pyspark==3.3.0
 regex==2022.9.13
-usaddress==0.5.10
+usaddress-scourgify==0.2.4
 dbt-core==1.4.1
 dbt-postgres==1.4.1

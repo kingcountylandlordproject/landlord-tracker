@@ -37,6 +37,9 @@ transform () {
     echo "Running transforms"
     cd $DIR/dbt
     dbt run
+
+    python3 -m engels.dbt_models.parcel_address
+
     dbt test
 }
 
