@@ -2,14 +2,17 @@
 version: 2
 
 models:
-  - name: owner_address_groups
-    description: >
-      diagnostic table for finding the various names on record for a given address
-      in the real_property_account table
 
   - name: parcel
     description: >
       PK is major_minor.
+
+      Parcels don't have an address. An apartment complex seems to have the same major_minor
+      identifier as the parcel it sits on.
+
+  - name: parcel_address
+    description: >
+      Mapping of addresses to parcels.
 
       Parcels don't have an address. An apartment complex seems to have the same major_minor
       identifier as the parcel it sits on.
@@ -19,11 +22,11 @@ models:
       "real" (eReal?) property accounts. Grain of this table is (acct_nbr, bill_yr, levy_code),
       though records are only for the current year.
 
-      This can be used to build a list of owners. An owner entity has multiple tax accounts,
-      one per parcel they pay tax on. So there is no unique identifier in this data for a given
-      person or company. This needs to be derived/reconciled downstream.
+      Taxpayer info (names, addresses) can be clues to ownership. A taxpayer entity has multiple
+      tax accounts, one per parcel they pay tax on. So there is no unique identifier in this data
+      for a given person or company. This needs to be derived/reconciled downstream.
 
-      Adjustments to owner information could be handled by using a correction table of
+      Adjustments to taxpayer information could be handled by using a correction table of
       (major_minor, taxpayer_name, fixed_name) fields.
 
       The most recent files from KCDA have the TaxpayerName field removed, so we merge in older files
@@ -43,3 +46,8 @@ sources:
       - name: raw_real_property_account_2022_07_06
       - name: raw_residential_building
       - name: raw_vacant_lot
+  - name: ext
+    description: data created outside dbt and SQL
+    schema: public
+    tables:
+      - name: parcel_address
