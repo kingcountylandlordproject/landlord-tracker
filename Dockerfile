@@ -27,6 +27,4 @@ COPY . .
 ENV PYTHONPATH /opt/kclp
 ENV PATH="${PATH}:/opt/kclp/bin"
 
-COPY docker-entrypoint.sh /
-
-ENTRYPOINT ["./docker-entrypoint.sh"]
+ENTRYPOINT ["/opt/kclp/docker-entrypoint.sh"]
