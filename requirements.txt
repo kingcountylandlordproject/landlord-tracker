@@ -5,7 +5,6 @@ requests==2.25.0
 beautifulsoup4==4.9.3
 pyyaml
 sqlalchemy==1.4.46
-psycopg2
 #pyspark==3.3.0
 regex==2022.9.13
 usaddress-scourgify==0.2.4
