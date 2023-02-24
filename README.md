@@ -2,7 +2,13 @@
 
 ## Running this
 
+This should work on Linux, Mac, and Windows.
+
 * install docker
+
+* if you're on Windows, run `git config --global core.autocrlf false`
+
+* clone this repo
 
 * unzip the data package zipfile into the `./data` directory
 
@@ -28,6 +34,7 @@ docker compose up --build -d
 
 ```sh
 # run the entire build
+# on windows, add "winpty" to the front
 docker compose run elt build-all
 ```
 
@@ -41,6 +48,9 @@ database, but the data should be preserved and available agaion the next time
 you run `compose up`.
 
 ## Doing Development
+
+note: on windows, add "winpty" to the front of docker commands
+to get interactivity and avoid output buffering
 
 ### Dev Process
 
