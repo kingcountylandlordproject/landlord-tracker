@@ -39,6 +39,7 @@ sources:
     tables:
       - name: raw_apartment_complex
       - name: raw_commercial_building
+      - name: raw_complaints
       - name: raw_condo_complex
       - name: raw_corporations
       - name: raw_parcel
@@ -46,8 +47,9 @@ sources:
       - name: raw_real_property_account_2022_07_06
       - name: raw_residential_building
       - name: raw_vacant_lot
-  - name: ext
-    description: data created outside dbt and SQL
+  - name: pre
+    description: data preprocessed from raw
     schema: public
     tables:
-      - name: parcel_address
+      - name: pre_apartment_complex_address
+      - name: pre_real_property_account_address

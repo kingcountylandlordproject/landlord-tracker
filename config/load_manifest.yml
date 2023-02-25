@@ -17,6 +17,14 @@ sources:
 
 tables:
 
+  pre_apartment_complex_address:
+    path: 'preprocessed/kcda/2023_02_17/pre_apartment_complex_address.csv'
+    preprocess: true
+
+  pre_real_property_account_address:
+    path: 'preprocessed/kcda/2023_02_17/pre_real_property_account_address.csv'
+    preprocess: true
+
   raw_apartment_complex:
     path: 'raw/kcda/2023_02_17/EXTR_AptComplex.csv'
     source: *king_county_assessors

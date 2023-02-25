@@ -1,6 +1,7 @@
 select
-    concat(major, minor) as major_minor
-    {% for col in adapter.get_columns_in_relation(source('src', 'raw_apartment_complex')) -%}
-        ,{{ xtrim(col.column) }}
-    {% endfor %}
-from {{ source('src', 'raw_apartment_complex') }}
+    ac.*
+    ,COALESCE(a.address_normalized, a.address) as address_normalized
+from {{ ref('int_apartment_complex') }} ac
+left join {{ source('pre', 'pre_apartment_complex_address') }} a 
+    on a.major = ac.major 
+    and a.minor = ac.minor

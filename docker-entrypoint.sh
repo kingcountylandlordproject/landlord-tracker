@@ -28,6 +28,12 @@ landlord_tracker:
 EOF
 fi
 
+preprocess() {
+    echo "Preprocessing files"
+    python3 -m engels.preprocess.pre_apartment_complex_address
+    python3 -m engels.preprocess.pre_real_property_account
+}
+
 load () {
     echo "Loading database tables"
     load_sources.py
@@ -37,9 +43,6 @@ transform () {
     echo "Running transforms"
     cd $DIR/dbt
     dbt run
-
-    python3 -m engels.dbt_models.stg_parcel_address
-
     dbt test
 }
 
@@ -49,7 +52,10 @@ docs () {
     dbt docs generate
 }
 
-if [ "$1" = 'load' ]; then
+if [ "$1" = 'preprocess' ]; then
+    preprocess
+
+elif [ "$1" = 'load' ]; then
     load
 
 elif [ "$1" = 'transform' ]; then
@@ -57,6 +63,7 @@ elif [ "$1" = 'transform' ]; then
     docs
 
 elif [ "$1" = 'build-all' ]; then
+    preprocess
     load
     transform
     docs
