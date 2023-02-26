@@ -1,7 +1,7 @@
 
 {{ config(
     indexes=[
-      {'columns': ['taxpayer_name']},
+      {'columns': ['taxpayer_name', 'address_normalized']},
       {'columns': ['address_normalized']},
     ]
 )}}
