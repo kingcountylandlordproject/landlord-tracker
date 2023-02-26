@@ -1,5 +1,7 @@
 import csv
 from dataclasses import dataclass
+from functools import partial
+from multiprocessing import Pool
 import os
 import os.path
 from typing import Callable, List, Union
@@ -17,6 +19,16 @@ class NormalizeAddressParams:
     address_normalized_field: str
 
 
+def normalize_address_for_row(params: NormalizeAddressParams, row):
+    output_row = [row[k] for k in (params.key_fields)]
+    if callable(params.address_field):
+        address = params.address_field(row)
+    else:
+        address = row[params.address_field]
+    output_row.append(normalize(address))
+    return output_row
+
+
 def normalize_address_in_file(params: NormalizeAddressParams):
     data_path = get_data_path()
 
@@ -32,11 +44,6 @@ def normalize_address_in_file(params: NormalizeAddressParams):
 
             writer.writerow([*params.key_fields, params.address_normalized_field])
 
-            for row in reader:
-                output_row = [row[k] for k in (params.key_fields)]
-                if callable(params.address_field):
-                    address = params.address_field(row)
-                else:
-                    address = row[params.address_field]
-                output_row.append(normalize(address))
-                writer.writerow(output_row)
+            with Pool() as p:                
+                for output_row in p.imap(partial(normalize_address_for_row, params), reader, 10000):
+                    writer.writerow(output_row)
