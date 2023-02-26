@@ -77,8 +77,9 @@ the pipelines.
 
 For tables:
 
-`raw_` - raw aka source tables, imported into the database either directly
-from extract files or lightly preprocessed.
+`pre_` - data preprocessed from raw files
+
+`raw_` - raw aka source tables, imported into the database directly from extract files
 
 `int_` - intermediate tables; these only exist to help create other tables.
 
