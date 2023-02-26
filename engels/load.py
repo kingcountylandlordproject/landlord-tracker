@@ -131,7 +131,7 @@ def load_all():
                     os.unlink(tmpfile.name)
 
 
-def create_data_package():
+def create_data_package(include_preprocessed=False):
     """
     Create a .zip file containing all the files under the data/ 
     directory needed to satisfy the load manifest file
@@ -143,7 +143,11 @@ def create_data_package():
     paths = []
     for table in tables.keys():
         table_entry = tables[table]
-        paths.append(table_entry['path'])
+        include = True
+        if not include_preprocessed:
+            include = not bool(table_entry.get('preprocess', False))
+        if include:
+            paths.append(table_entry['path'])
 
     data_dir = os.path.join(get_project_path(), "data")
 
