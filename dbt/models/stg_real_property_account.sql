@@ -1,6 +1,4 @@
 
--- TODO: this model should be generated in Python to normalize addresses
-
 {{ config(
     indexes=[
       {'columns': ['taxpayer_name']},
