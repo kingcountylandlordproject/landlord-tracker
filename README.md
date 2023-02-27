@@ -17,7 +17,7 @@ cd data
 unzip /path/to/data.zip
 ```
 
-* start services required for the build (right now, just the database):
+* start services required for the build:
 
 ```sh
 # docker build needs buildkit enabled
@@ -26,7 +26,7 @@ export DOCKER_BUILDKIT=1
 # copy sample .env file
 cp .env-sample .env
 
-# starts the database running in the background (takes a minute)
+# starts the database and other services:
 docker compose up --build -d
 ```
 
