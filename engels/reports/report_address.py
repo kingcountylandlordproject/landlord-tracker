@@ -37,11 +37,14 @@ def report(address):
         taxpayer_names = set([account['taxpayer_name'] for account in accounts])
         addresses = set([account['address_normalized'] for account in accounts])
 
-        print("Names found in taxpayer entries:")
+        print(("-" * 40) + "\n")
+
+        print("Names found in taxpayer entries:\n")
+
         for taxpayer_name in taxpayer_names:
             print(f"{taxpayer_name}")
 
-            apt_complexes = conn.exec_driver_sql("""
+            other_apt_complexes = conn.exec_driver_sql("""
             select sac.*
             from stg_apartment_complex sac
             where major_minor in
@@ -49,17 +52,20 @@ def report(address):
             order by major_minor
             """, (taxpayer_name,)).mappings()
 
-            print(f"  Other apartment complexes with tax records with this name:")
-            for apt_complex in apt_complexes:
-                print(f"  {apt_complex['major_minor']} - {apt_complex['address_normalized']}")
+            print(f"  Apartment complexes with tax records with this name:")
+            for other_apt_complex in other_apt_complexes:
+                print(f"  {other_apt_complex['major_minor']} - {other_apt_complex['address_normalized']}")
 
             print("")
 
-        print("Addresses found in taxpayer entries:")
+        print(("-" * 40) + "\n")
+
+        print("Addresses found in taxpayer entries:\n")
+
         for address in addresses:
             print(f"{address}")
             
-            parcels = conn.exec_driver_sql("""
+            other_apt_complexes = conn.exec_driver_sql("""
             select sac.*
             from stg_apartment_complex sac
             where major_minor in
@@ -67,9 +73,9 @@ def report(address):
             order by major_minor
             """, (address,)).mappings()
 
-            print(f"  Other apartment complexes with tax records with this address:")
-            for parcel in parcels:
-                print(f"  {apt_complex['major_minor']} - {apt_complex['address_normalized']}")
+            print(f"  Apartment complexes with tax records with this address:")
+            for other_apt_complex in other_apt_complexes:
+                print(f"  {other_apt_complex['major_minor']} - {other_apt_complex['address_normalized']}")
 
             print("")
 
@@ -78,7 +84,10 @@ def report(address):
         order by open_date desc
         """, (apt_complex['address'],)).mappings()
 
-        print("Complaints:")
+        print(("-" * 40) + "\n")
+
+        print("Complaints:\n")
+
         for complaint in complaints:
             print(f"{complaint['open_date']} - {trunc(complaint['description'])}")
 
