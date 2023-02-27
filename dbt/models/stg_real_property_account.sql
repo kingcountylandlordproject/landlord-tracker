@@ -3,6 +3,7 @@
     indexes=[
       {'columns': ['taxpayer_name', 'address_normalized']},
       {'columns': ['address_normalized']},
+      {'columns': ['major_minor']},
     ]
 )}}
 
