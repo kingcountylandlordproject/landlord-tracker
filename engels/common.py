@@ -1,6 +1,8 @@
+import datetime
+import os
+
 import yaml
 from sqlalchemy import create_engine
-import os
 
 LOAD_MANIFEST_PATH = "config/load_manifest.yml"
 
@@ -66,3 +68,11 @@ def get_load_manifest():
             print(exc)
             exit()
     return config
+
+
+def readable_timestamp():
+    s = datetime.datetime.now().isoformat()
+    
+    for ch in "-:T":
+        s = s.replace(ch, "_")
+    return s[:s.index(".")]

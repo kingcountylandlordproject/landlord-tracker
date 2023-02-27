@@ -31,6 +31,7 @@ fi
 preprocess() {
     echo "Preprocessing files"
     python3 -m engels.preprocess.pre_apartment_complex_address
+    python3 -m engels.preprocess.pre_corporations
     python3 -m engels.preprocess.pre_real_property_account
 }
 

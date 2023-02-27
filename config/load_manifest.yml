@@ -25,6 +25,13 @@ tables:
     path: 'preprocessed/kcda/2023_02_17/pre_real_property_account_address.csv'
     preprocess: true
 
+  pre_corporations:
+    path: 'preprocessed/wasos/2022_10_17/Corporations-patched.txt'
+    format: tsv
+    source: *wasos
+    comment: |
+      patched file has 67 lines dropped due to "extra field" problems
+
   raw_apartment_complex:
     path: 'raw/kcda/2023_02_17/EXTR_AptComplex.csv'
     source: *king_county_assessors
@@ -38,13 +45,6 @@ tables:
     source: *sdci
     comment: |
       https://data.seattle.gov/Community/Code-Complaints-and-Violations/ez4a-iug7
-
-  raw_corporations:
-    path: 'raw/wasos/2022_10_17/Corporations-patched.txt'
-    format: tsv
-    source: *wasos
-    comment: |
-      patched file has 67 lines dropped due to "extra field" problems
 
   raw_condo_complex:
     path: 'raw/kcda/2023_02_17/EXTR_CondoComplex.csv'

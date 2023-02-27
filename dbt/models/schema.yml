@@ -41,7 +41,6 @@ sources:
       - name: raw_commercial_building
       - name: raw_complaints
       - name: raw_condo_complex
-      - name: raw_corporations
       - name: raw_parcel
       - name: raw_real_property_account
       - name: raw_real_property_account_2022_07_06
@@ -52,4 +51,5 @@ sources:
     schema: public
     tables:
       - name: pre_apartment_complex_address
+      - name: pre_corporations
       - name: pre_real_property_account_address

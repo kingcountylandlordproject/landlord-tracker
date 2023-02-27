@@ -6,7 +6,7 @@ import re
 import subprocess
 import tempfile
 
-from .common import get_data_path, get_db_data_path, get_load_manifest, get_project_path
+from .common import get_data_path, get_db_data_path, get_load_manifest, get_project_path, readable_timestamp
 from .db import get_db_engine
 
 class AutoName(Enum):
@@ -151,4 +151,6 @@ def create_data_package(include_preprocessed=False):
 
     data_dir = os.path.join(get_project_path(), "data")
 
-    subprocess.run(f"zip data.zip {' '.join(paths)}", cwd=data_dir, shell=True)
+    target = f"data_minimal_{readable_timestamp()}.zip"
+
+    subprocess.run(f"zip {target} {' '.join(paths)}", cwd=data_dir, shell=True)
