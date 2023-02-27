@@ -1,0 +1,91 @@
+
+sources:
+  king_county_assessors: &king_county_assessors
+    name: 'King County Department of Assessments'
+    comment: |
+      https://info.kingcounty.gov/assessor/DataDownload/default.aspx
+      
+      Note "Download All Above files" link at bottom of page.
+
+  sdci: &sdci
+    name: 'Seattle Department of Construction & Inspections'
+
+  wasos: &wasos
+    name: 'WA Secretary of State'
+    comment: |
+      extracts are not available on website anymore
+
+tables:
+
+  pre_apartment_complex_address:
+    path: 'preprocessed/kcda/2023_02_17/pre_apartment_complex_address.csv'
+    preprocess: true
+
+  pre_real_property_account_address:
+    path: 'preprocessed/kcda/2023_02_17/pre_real_property_account_address.csv'
+    preprocess: true
+
+  pre_corporations:
+    path: 'preprocessed/wasos/2022_10_17/Corporations-patched.txt'
+    format: tsv
+    source: *wasos
+    comment: |
+      patched file has 67 lines dropped due to "extra field" problems
+
+  raw_apartment_complex:
+    path: 'raw/kcda/2023_02_17/EXTR_AptComplex.csv'
+    source: *king_county_assessors
+
+  raw_commercial_building:
+    path: 'raw/kcda/2023_02_17/EXTR_CommBldg.csv'
+    source: *king_county_assessors
+
+  raw_complaints:
+    path: 'raw/sdci/2023_02_21/Code_Complaints_and_Violations.csv'
+    source: *sdci
+    comment: |
+      https://data.seattle.gov/Community/Code-Complaints-and-Violations/ez4a-iug7
+
+  raw_condo_complex:
+    path: 'raw/kcda/2023_02_17/EXTR_CondoComplex.csv'
+    source: *king_county_assessors
+
+  # TODO: figure out more expedient way to load this; it contains name information
+  #
+  # raw_change_history_detail:
+  #   encoding: latin-1
+  #   path: 'raw/kcda/2023_02_17/EXTR_ChangeHistDetail_V.csv'
+  #   remove_newlines_in_values: true
+  #   source: *king_county_assessors
+
+  raw_parcel:
+    format: csv
+    encoding: latin-1
+    path: 'raw/kcda/2023_02_17/EXTR_Parcel.csv'
+    source: *king_county_assessors
+
+  raw_real_property_account:
+    format: csv
+    encoding: latin-1
+    path: 'raw/kcda/2023_02_17/EXTR_RPAcct_NoName.csv'
+    source: *king_county_assessors
+
+  raw_real_property_account_2022_07_06:
+    format: csv
+    encoding: latin-1
+    path: 'raw/kcda/2022_07_06/EXTR_RPAcct_220706.csv'
+    source: *king_county_assessors
+    comment: |
+      last accounts file we have with taxpayername field
+
+  raw_residential_building:
+    format: csv
+    encoding: latin-1
+    path: 'raw/kcda/2023_02_17/EXTR_ResBldg.csv'
+    source: *king_county_assessors
+
+  raw_vacant_lot:
+    format: csv
+    encoding: latin-1
+    path: 'raw/kcda/2023_02_17/EXTR_VacantLot.csv'
+    source: *king_county_assessors

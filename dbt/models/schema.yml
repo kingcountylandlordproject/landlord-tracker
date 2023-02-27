@@ -1,0 +1,55 @@
+
+version: 2
+
+models:
+
+  - name: stg_parcel
+    description: >
+      PK is major_minor.
+
+      Parcels don't have an address. An apartment complex seems to have the same major_minor
+      identifier as the parcel it sits on.
+
+  - name: stg_parcel_address
+    description: >
+      Mapping of addresses to parcels.
+
+      Parcels don't have an address. An apartment complex seems to have the same major_minor
+      identifier as the parcel it sits on.
+
+  - name: stg_real_property_account
+    description: >
+      "real" (eReal?) property accounts. Grain of this table is (acct_nbr, bill_yr, levy_code),
+      though records are only for the current year.
+
+      Taxpayer info (names, addresses) can be clues to ownership. A taxpayer entity has multiple
+      tax accounts, one per parcel they pay tax on. So there is no unique identifier in this data
+      for a given person or company. This needs to be derived/reconciled downstream.
+
+      Adjustments to taxpayer information could be handled by using a correction table of
+      (major_minor, taxpayer_name, fixed_name) fields.
+
+      The most recent files from KCDA have the TaxpayerName field removed, so we merge in older files
+      to get those names. TODO: the names are also present in other current files in the dataset,
+      try to use those instead.
+
+sources:
+  - name: src
+    schema: public
+    tables:
+      - name: raw_apartment_complex
+      - name: raw_commercial_building
+      - name: raw_complaints
+      - name: raw_condo_complex
+      - name: raw_parcel
+      - name: raw_real_property_account
+      - name: raw_real_property_account_2022_07_06
+      - name: raw_residential_building
+      - name: raw_vacant_lot
+  - name: pre
+    description: data preprocessed from raw
+    schema: public
+    tables:
+      - name: pre_apartment_complex_address
+      - name: pre_corporations
+      - name: pre_real_property_account_address

@@ -1,0 +1,7 @@
+*
+!/bin
+!/dbt
+!/engels
+!docker-entrypoint.sh
+!setup.py
+!requirements.txt
