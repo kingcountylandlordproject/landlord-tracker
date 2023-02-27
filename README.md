@@ -43,6 +43,13 @@ the postgres database on localhost:5433 using a SQL client (like DBeaver) or use
 
 ```docker exec -it landlord-tracker-db-1 psql -U postgres```
 
+* to run the address report (replace 123 MAIN ST with a real address of an apartment
+complex):
+
+```sh
+docker compose run elt python3 -m engels.reports.report_address "123 MAIN ST"
+```
+
 * to stop the stack, run `docker compose down`. This stops the postgres
 database, but the data should be preserved and available agaion the next time
 you run `compose up`.
