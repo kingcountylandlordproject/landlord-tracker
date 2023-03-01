@@ -12,7 +12,7 @@ from .db import get_db_engine
 class AutoName(Enum):
     def _generate_next_value_(name, start, count, last_values):
         return name
-    
+
 class FileFormat(AutoName):
     CSV = auto()
     TSV = auto()
@@ -74,7 +74,7 @@ def load_all():
     engine = get_db_engine()
 
     load_manifest = get_load_manifest()
-        
+
     tables = load_manifest['tables']
 
     with engine.connect() as conn:
@@ -92,10 +92,10 @@ def load_all():
 
                 if remove_newlines_in_values:
                     print("Removing newlines in file")
-                    tmpfile = tempfile.NamedTemporaryFile() 
+                    tmpfile = tempfile.NamedTemporaryFile()
                     do_remove_newlines_in_values(full_path, tmpfile.name, encoding=encoding)
                     full_path = tmpfile.name
-                
+
                 if load == 'full':
                     drop_table_sql = f"DROP TABLE IF EXISTS {table}"
                     conn.execute(drop_table_sql)
@@ -104,7 +104,7 @@ def load_all():
                 original_column_names = parse_header(first_line, format)
                 column_names = parse_header(first_line, format, normalize=True)
                 fields = ",".join([ f"{header} VARCHAR" for header in column_names ])
-                
+
                 create_table_sql = f"CREATE TABLE {table} ({fields})"
                 conn.execute(create_table_sql)
 
@@ -131,26 +131,33 @@ def load_all():
                     os.unlink(tmpfile.name)
 
 
-def create_data_package(include_preprocessed=False):
+def create_data_package(all=False, include_preprocessed=False):
     """
-    Create a .zip file containing all the files under the data/ 
+    Create a .zip file containing all the files under the data/
     directory needed to satisfy the load manifest file
     """
-    load_manifest = get_load_manifest()
-        
-    tables = load_manifest['tables']
-    
-    paths = []
-    for table in tables.keys():
-        table_entry = tables[table]
-        include = True
-        if not include_preprocessed:
-            include = not bool(table_entry.get('preprocess', False))
-        if include:
-            paths.append(table_entry['path'])
-
     data_dir = os.path.join(get_project_path(), "data")
 
-    target = f"data_minimal_{readable_timestamp()}.zip"
+    load_manifest = get_load_manifest()
 
-    subprocess.run(f"zip {target} {' '.join(paths)}", cwd=data_dir, shell=True)
+    tables = load_manifest['tables']
+
+    if all:
+        target = f"data_all_{readable_timestamp()}.zip"
+        command = f"zip {target} -r preprocessed raw"
+    else:
+        paths = []
+        for table in tables.keys():
+            table_entry = tables[table]
+            include = True
+            if not include_preprocessed:
+                include = not bool(table_entry.get('preprocess', False))
+            if include:
+                paths.append(table_entry['path'])
+
+        target = f"data_minimal_{readable_timestamp()}.zip"
+
+        command = f"zip {target} {' '.join(paths)}"
+
+    print(f"Creating {target}")
+    subprocess.run(command, cwd=data_dir, shell=True)
