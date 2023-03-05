@@ -13,7 +13,7 @@ select
       -- concat_ws ignores nulls
       concat_ws(',', rpa.addr_line, rpa.city_state, rpa.zip_code)
     ) as address_normalized
-from {{ ref('int_real_property_account_fix_names') }} rpa
+from {{ ref('int_real_property_account_all_years') }} rpa
 left join {{ ref('int_real_property_account_address_dedupe') }} d
   on rpa.major = d.major
   and rpa.minor = d.minor
