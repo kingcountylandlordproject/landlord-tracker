@@ -1,7 +1,9 @@
 
 # Aleph
 
-This is work in progress.
+This is a work in progress.
+
+This stack has been run on a laptop with 8GB of RAM but it's tight.
 
 ```sh
 # make sure you're in this directory
@@ -24,3 +26,11 @@ docker compose run shell /landlord-tracker/aleph_lt/load_mappings.sh
 ```
 
 Log into the web UI as the user you created.
+
+When making major changes (especially involving changes to keys for entities),
+you'll probably want to reset the collection:
+
+```sh
+docker compose run shell
+aleph delete landlord_tracker && aleph resetindex && aleph resetcache
+```

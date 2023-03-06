@@ -56,11 +56,14 @@ you run `compose up`.
 
 ## Aleph
 
+This repo includes an [Aleph](https://github.com/alephdata/aleph) stack for
+browsing the data.
+
 First, generate files that Aleph will need to import:
 
 ```sh
 # generate files in data/export
-docker compose run elt python3 -m engels.extract.aleph
+docker compose run elt python3 -m engels.export.aleph
 ```
 
 Then run the Aleph stack by following [these instructions](aleph_it/README.md).

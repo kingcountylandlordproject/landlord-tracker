@@ -2,7 +2,31 @@
 # name of the Aleph collection
 landlord_tracker:
   queries:
-  - csv_url: /landlord-tracker/data/export/stg_real_property_account.csv
+
+  - csv_url: /landlord-tracker/data/export/aleph_apartment_complex.csv
+    entities:
+      parcel_address:
+        schema: Address
+        keys:
+        - address_normalized
+        properties:
+          full:
+            column: address_normalized
+      parcel:
+        schema: RealEstate
+        keys:
+        - major_minor
+        properties:
+          name:
+            column: complex_descr
+          registrationNumber:
+            column: major_minor
+          addressEntity:
+            entity: parcel_address
+          propertyType:
+            literal: "Apartment Complex"
+
+  - csv_url: /landlord-tracker/data/export/aleph_real_property_account.csv
     entities:
       taxpayer_address:
         schema: Address
@@ -13,8 +37,10 @@ landlord_tracker:
             column: address_normalized
       taxpayer:
         schema: LegalEntity
+        # a taxpayer entity must be identified by name AND address
         keys:
         - taxpayer_name
+        - address_normalized
         properties:
           name:
             column: taxpayer_name
@@ -24,9 +50,6 @@ landlord_tracker:
         schema: RealEstate
         keys:
         - major_minor
-        properties:
-          registrationNumber:
-            column: major_minor
       tax_relation:
         # TODO: Ownership is not the appropriate schema to use, need to find a relationship
         # that indicates an entity paid tax on a property 
