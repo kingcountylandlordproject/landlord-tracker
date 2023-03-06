@@ -1,0 +1,43 @@
+
+# name of the Aleph collection
+landlord_tracker:
+  queries:
+  - csv_url: /landlord-tracker/data/export/stg_real_property_account.csv
+    entities:
+      taxpayer_address:
+        schema: Address
+        keys:
+        - address_normalized
+        properties:
+          full:
+            column: address_normalized
+      taxpayer:
+        schema: LegalEntity
+        keys:
+        - taxpayer_name
+        properties:
+          name:
+            column: taxpayer_name
+          addressEntity:
+            entity: taxpayer_address
+      parcel:
+        schema: RealEstate
+        keys:
+        - major_minor
+        properties:
+          registrationNumber:
+            column: major_minor
+      tax_relation:
+        # TODO: Ownership is not the appropriate schema to use, need to find a relationship
+        # that indicates an entity paid tax on a property 
+        schema: Ownership
+        # not sure why we need key_literal
+        key_literal: Ownership
+        keys:
+        - taxpayer_name
+        - major_minor
+        properties:
+          owner:
+            entity: taxpayer
+          asset:
+            entity: parcel
